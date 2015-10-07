@@ -8,11 +8,12 @@ use std::process::{Command, Stdio};
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
     let result = Command::new("make")
-        .args(&["-f", "makefile.cargo"])
+        .args(&["-R", "-f", "makefile.cargo"])
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .status()
         .unwrap();
     assert!(result.success());
-    println!("cargo:rustc-flags=-L native={}", out_dir);
+    println!("cargo:rustc-link-search=native={}", out_dir);
+    println!("cargo:rustc-link-lib=static=stb-image");
 }
